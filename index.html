@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Literasi Kota Koordinat (Acak)</title>
+    <style>
+        :root {
+            --primary: #2e7d32; /* Hijau Hutan */
+            --primary-light: #81c784; 
+            --bg-color: #f1f8e9; /* Hijau pucat */
+            --card-bg: #ffffff;
+            --text-color: #1b5e20;
+            --wrong: #c62828;
+            --correct: #2e7d32;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Verdana', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            border: 4px solid var(--primary-light);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px dashed var(--primary-light);
+            padding-bottom: 20px;
+        }
+
+        h1 { color: var(--primary); margin: 0; font-size: 2em; }
+        
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Kotak Cerita Literasi */
+        .story-box {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 8px solid var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.15em;
+            line-height: 1.8;
+            text-align: justify;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .visual-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            background: #ffffff;
+            border: 2px solid #c8e6c9;
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        svg { max-width: 100%; height: auto; }
+
+        .question-text { 
+            font-weight: bold; 
+            font-size: 1.3em; 
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: #fafafa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.1em;
+        }
+
+        .option-label:hover { background-color: #e8f5e9; border-color: var(--primary); transform: translateX(5px); }
+        
+        input[type="radio"], input[type="checkbox"] { transform: scale(1.5); margin-right: 15px; }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #c8e6c9;
+            border-radius: 12px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #1b5e20;
+            transition: transform 0.1s;
+        }
+
+        .btn:active { transform: translateY(4px); box-shadow: none; }
+        
+        .feedback {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+            background-color: #fff3e0;
+            border: 2px solid #ffb74d;
+            animation: slideDown 0.5s;
+        }
+        
+        .feedback h3 { margin-top: 0; color: #e65100; }
+        
+        @keyframes slideDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🗺️ Petualangan Kota Peta</h1>
+        <p>Kelas 6 SD - Latihan Acak (Random)</p>
+    </header>
+
+    <div id="intro-screen">
+        <div class="story-box">
+            <p><strong>Halo Penjelajah Cilik! 🌟</strong></p>
+            <p>Selamat datang kembali di Kota Peta. Kali ini tantangannya lebih seru karena <strong>urutan misi akan diacak!</strong> Kamu harus benar-benar teliti membaca peta dan cerita.</p>
+            <p><strong>Misi Kamu:</strong></p>
+            <ul>
+                <li>Total ada 15 Misi.</li>
+                <li>Soal Peta (Huruf-Angka) dan Koordinat (X,Y) akan muncul secara acak.</li>
+                <li>Perhatikan gambar dan baca cerita dengan saksama.</li>
+            </ul>
+            <p>Siap menguji kemampuanmu? Ayo mulai!</p>
+        </div>
+        <button class="btn" onclick="startQuiz()">Mulai Petualangan Acak! 🚀</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        
+        <div class="story-box" id="story-text"></div>
+        <div class="visual-container" id="visual-area"></div>
+        
+        <div class="question-box">
+            <div class="question-text" id="question-text"></div>
+            <div id="input-area" class="options-grid"></div>
+        </div>
+
+        <div id="feedback-area" class="feedback"></div>
+
+        <button class="btn" id="submit-btn" onclick="checkAnswer()">Cek Jawaban 🔍</button>
+        <button class="btn hidden" id="next-btn" onclick="nextQuestion()">Lanjut ➡️</button>
+    </div>
+
+    <div id="result-screen" class="hidden" style="text-align: center;">
+        <h2>Petualangan Selesai! 🎉</h2>
+        <div style="font-size: 5em; margin: 20px;">🏆</div>
+        <h1 id="final-score" style="font-size: 3em;"></h1>
+        <p id="final-msg" style="font-size: 1.5em;"></p>
+        <button class="btn" onclick="location.reload()">Main Lagi (Acak Ulang) 🔄</button>
+    </div>
+</div>
+
+<script>
+    // --- DATABASE SOAL ---
+    const questionsDB = [
+        {
+            gridType: 'alpha',
+            story: "Pada hari Minggu yang cerah, Budi memutuskan untuk mengunjungi rumah neneknya. Ia menyiapkan bekal dan melihat peta kota agar tidak tersesat. Di peta tersebut, rumah Budi ditandai dengan ikon rumah berwarna biru yang sangat jelas. Lokasi rumahnya berada di baris paling bawah peta. Jika kita melihat kolom huruf, rumahnya sejajar dengan huruf C.",
+            question: "Di koordinat manakah letak Rumah Budi?",
+            points: [{x: 'C', y: 1, label: "Rumah", icon: "🏠"}],
+            type: 'mc',
+            options: ["(A, 1)", "(C, 1)", "(C, 3)", "(B, 2)"],
+            answer: 1,
+            explanation: "Pada peta grid huruf-angka, kita membaca huruf mendatar (Sumbu X) terlebih dahulu, baru angka tegak (Sumbu Y). Rumah Budi ada di kolom C dan baris 1. Jadi koordinatnya (C, 1)."
+        },
+        {
+            gridType: 'alpha',
+            story: "Setelah berjalan keluar dari kompleks perumahan, Budi merasa sedikit pusing. Ia menyadari bahwa ia lupa sarapan pagi ini. Ia segera mencari rumah sakit atau puskesmas terdekat untuk meminta vitamin. Di peta, ikon rumah sakit ditandai dengan gambar bangunan dengan tanda tambah. Letaknya berada agak jauh di pojok kanan atas peta.",
+            question: "Tentukan koordinat Rumah Sakit berdasarkan gambar!",
+            points: [{x: 'F', y: 5, label: "RS", icon: "🏥"}],
+            type: 'mc',
+            options: ["(F, 5)", "(5, F)", "(E, 4)", "(G, 6)"],
+            answer: 0,
+            explanation: "Perhatikan ikon Rumah Sakit (🏥). Ia terletak lurus di atas huruf F dan lurus di samping angka 5. Maka penulisannya adalah (F, 5)."
+        },
+        {
+            gridType: 'alpha',
+            story: "Budi melanjutkan perjalanan melewati taman kota yang indah. Di sana banyak burung berkicau dan anak-anak bermain bola. Budi melihat sebuah sekolah besar tempat sepupunya belajar. Sekolah itu terletak tepat di tengah-tengah peta perjalanan Budi. Di peta, sekolah disimbolkan dengan bangunan bertingkat.",
+            question: "Di manakah posisi Sekolah berada?",
+            points: [{x: 'D', y: 3, label: "Sekolah", icon: "🏫"}],
+            type: 'fill',
+            answer: "(d,3)",
+            explanation: "Ikon Sekolah (🏫) berada di pertemuan kolom D dan baris 3. Jawaban yang benar adalah (D, 3)."
+        },
+        {
+            gridType: 'alpha',
+            story: "Hari semakin siang dan matahari bersinar terik. Budi merasa haus dan ingin membeli minuman dingin. Ia melihat ada sebuah minimarket di seberang jalan. Di dalam peta, minimarket ini terletak dua kotak di sebelah kanan Rumah Budi (yang ada di C,1). Budi segera berjalan ke arah sana.",
+            question: "Jika Rumah Budi di (C,1), di mana koordinat Minimarket (2 kotak ke kanan)?",
+            points: [{x: 'C', y: 1, label: "Rumah", icon: "🏠"}, {x: 'E', y: 1, label: "Toko", icon: "🏪"}],
+            type: 'mc',
+            options: ["(C, 3)", "(E, 1)", "(E, 3)", "(D, 1)"],
+            answer: 1,
+            explanation: "Rumah Budi di C. Jika geser 2 kotak ke kanan (huruf maju), maka C -> D -> E. Barisnya tetap di angka 1. Jadi Minimarket ada di (E, 1)."
+        },
+        {
+            gridType: 'alpha',
+            story: "Setelah segar minum es jeruk, Budi teringat ia harus mengirim surat untuk sahabat penanya. Ia mencari Kantor Pos di peta digitalnya. Ternyata Kantor Pos letaknya cukup unik. Posisinya berada di kolom A, yaitu kolom paling kiri di peta. Tingginya ada di baris nomor 4.",
+            question: "Manakah koordinat Kantor Pos yang benar?",
+            points: [{x: 'A', y: 4, label: "Pos", icon: "bm 📮"}],
+            type: 'mc',
+            options: ["(4, A)", "(A, 1)", "(A, 4)", "(B, 4)"],
+            answer: 2,
+            explanation: "Ingat prinsip: Huruf dulu, baru Angka. Posisi di kolom A dan baris 4 ditulis sebagai (A, 4)."
+        },
+        {
+            gridType: 'alpha',
+            story: "Tiba-tiba, Budi melihat mobil pemadam kebakaran melintas dengan sirine berbunyi. Budi penasaran di mana markas pemadam kebakaran itu. Di peta, markas tersebut ada di koordinat (G, 2). Namun, Budi bingung membaca peta tersebut.",
+            question: "Bantu Budi menemukan titik (G, 2) pada gambar!",
+            points: [{x: 'G', y: 2, label: "Damkar", icon: "🚒"}],
+            type: 'complex', 
+            options: ["Ada di kolom huruf G", "Ada di baris angka 2", "Ada di pojok kiri bawah", "Ada di dekat sumbu Y"],
+            answer: [0, 1],
+            explanation: "Koordinat (G, 2) artinya benda tersebut terletak lurus dengan huruf G (mendatar) dan lurus dengan angka 2 (tegak). Jadi pernyataan 1 dan 2 benar."
+        },
+        {
+            gridType: 'alpha',
+            story: "Budi melewati sebuah hutan kota kecil yang rimbun. Di dalam hutan itu terdapat pohon beringin tua yang sangat besar. Pohon itu menjadi penanda tengah hutan. Letak pohon itu ada di koordinat (B, 5). Budi ingin menandainya di buku catatannya.",
+            question: "Apakah arti dari koordinat (B, 5)? (Pilih 2 jawaban benar)",
+            points: [{x: 'B', y: 5, label: "Pohon", icon: "🌳"}],
+            type: 'complex',
+            options: ["Pohon itu ada di kolom B", "Pohon itu ada di baris 5", "Pohon itu ada di baris B", "Pohon itu ada di kolom 5"],
+            answer: [0, 1],
+            explanation: "Huruf B menunjukkan posisi mendatar (Kolom), sedangkan angka 5 menunjukkan posisi tegak (Baris). Jadi Pohon ada di Kolom B, Baris 5."
+        },
+        {
+            gridType: 'alpha',
+            story: "Di dekat rumah nenek, ada sebuah Bank dan sebuah Masjid yang megah. Bank terletak di posisi (F, 2). Sedangkan Masjid terletak tepat 3 kotak di atas Bank tersebut. Budi ingin sholat dzuhur di Masjid sebelum ke rumah nenek.",
+            question: "Di koordinat berapakah letak Masjid?",
+            points: [{x: 'F', y: 2, label: "Bank", icon: "🏦"}, {x: 'F', y: 5, label: "Masjid", icon: "🕌"}],
+            lines: [{x1: 'F', y1: 2, x2: 'F', y2: 5}],
+            type: 'fill',
+            answer: "(f,5)",
+            explanation: "Bank di (F, 2). Jika naik 3 kotak ke atas, huruf (kolom) tetap F. Angkanya bertambah: 2 + 3 = 5. Jadi Masjid ada di (F, 5)."
+        },
+        {
+            gridType: 'alpha',
+            story: "Akhirnya Budi hampir sampai. Ia melihat dua tempat makan favoritnya: Restoran Pizza di (B, 2) dan Restoran Burger di (E, 2). Kedua restoran ini terletak di jalan yang sama lurus mendatar. Budi bingung mau makan di mana nanti malam.",
+            question: "Pernyataan yang benar tentang kedua restoran tersebut adalah...",
+            points: [{x: 'B', y: 2, label: "Pizza", icon: "🍕"}, {x: 'E', y: 2, label: "Burger", icon: "🍔"}],
+            lines: [{x1: 'B', y1: 2, x2: 'E', y2: 2}],
+            type: 'mc',
+            options: ["Keduanya berada di kolom yang sama", "Keduanya berada di baris yang sama (Baris 2)", "Jaraknya adalah 5 kotak", "Restoran Pizza lebih ke kanan daripada Burger"],
+            answer: 1,
+            explanation: "Karena koordinatnya (B, 2) dan (E, 2), angka belakangnya sama-sama 2. Artinya mereka terletak pada baris/jalan yang sama."
+        },
+        {
+            gridType: 'alpha',
+            story: "Perjalanan Budi selesai. Ia sampai di sebuah pantai yang indah di ujung kota. Pantai tersebut membentang luas. Titik pusat pantai ditandai dengan payung pantai di koordinat (H, 1). Ini adalah titik paling kanan bawah di peta Budi.",
+            question: "Tulislah koordinat payung pantai tersebut!",
+            points: [{x: 'H', y: 1, label: "Pantai", icon: "🏖️"}],
+            type: 'fill',
+            answer: "(h,1)",
+            explanation: "Sesuai cerita dan gambar, posisi payung pantai ada di pertemuan kolom H dan baris 1. Ditulis (H, 1)."
+        },
+        {
+            gridType: 'cartesian',
+            story: "Sekarang Budi belajar matematika di sekolah. Gurunya mengajarkan sistem koordinat Kartesius yang menggunakan angka untuk kedua sumbu. Titik nol (0,0) ada di tengah. Budi diminta meletakkan titik A pada posisi mendatar 3 dan posisi tegak 2.",
+            question: "Manakah penulisan koordinat yang benar untuk titik A?",
+            points: [{x: 3, y: 2, label: "A", icon: "🔴"}],
+            type: 'mc',
+            options: ["(2, 3)", "(3, 2)", "(3, 0)", "(0, 2)"],
+            answer: 1,
+            explanation: "Rumus koordinat adalah (x, y). X adalah mendatar (3), Y adalah tegak (2). Maka ditulis (3, 2)."
+        },
+        {
+            gridType: 'cartesian',
+            story: "Guru Budi memberikan tantangan baru. Ia meletakkan sebuah titik B di sebelah kiri sumbu Y. Titik tersebut berjarak 4 langkah ke kiri dari titik pusat, dan 3 langkah ke atas. Budi harus hati-hati dengan tanda negatif.",
+            question: "Koordinat titik B adalah...",
+            points: [{x: -4, y: 3, label: "B", icon: "🔵"}],
+            type: 'mc',
+            options: ["(4, 3)", "(-4, -3)", "(-4, 3)", "(4, -3)"],
+            answer: 2,
+            explanation: "4 langkah ke kiri berarti x = -4. 3 langkah ke atas berarti y = 3 (positif). Jadi koordinatnya (-4, 3)."
+        },
+        {
+            gridType: 'cartesian',
+            story: "Budi melihat gambar segitiga di papan tulis. Salah satu titik sudutnya, yaitu Titik P, terletak tepat pada garis sumbu X. Titik ini ada di angka 5 sebelah kanan. Gurunya bertanya berapa nilai Y jika titik menempel di sumbu X.",
+            question: "Koordinat Titik P adalah...",
+            points: [{x: 5, y: 0, label: "P", icon: "🔺"}],
+            type: 'fill',
+            answer: "(5,0)",
+            explanation: "Setiap titik yang terletak tepat pada garis Sumbu X, pasti memiliki nilai Y = 0. Karena ada di angka 5 kanan, maka (5, 0)."
+        },
+        {
+            gridType: 'cartesian',
+            story: "Ada dua titik misterius. Titik M di (2, 4) dan Titik N di (2, -2). Budi menarik garis lurus menghubungkan kedua titik tersebut. Ia mengamati garis yang terbentuk.",
+            question: "Garis yang menghubungkan M dan N sejajar dengan sumbu apa? (Pilih 2 petunjuk)",
+            points: [{x: 2, y: 4, label: "M", icon: "🔸"}, {x: 2, y: -2, label: "N", icon: "🔸"}],
+            lines: [{x1: 2, y1: 4, x2: 2, y2: -2}],
+            type: 'complex',
+            options: ["Sejajar Sumbu Y (Tegak)", "Tegak Lurus Sumbu X", "Sejajar Sumbu X (Datar)", "Garis Miring"],
+            answer: [0, 1],
+            explanation: "Karena nilai X-nya sama (sama-sama 2), maka garisnya tegak lurus ke atas-bawah. Ini berarti sejajar dengan Sumbu Y dan tegak lurus terhadap Sumbu X."
+        },
+        {
+            gridType: 'cartesian',
+            story: "Soal terakhir! Budi diminta menentukan letak Kuadran. Ada sebuah titik Z di koordinat (-5, -2). Titik ini berada di daerah pojok kiri bawah.",
+            question: "Di Kuadran berapakah titik Z (-5, -2) berada?",
+            points: [{x: -5, y: -2, label: "Z", icon: "⭐"}],
+            type: 'mc',
+            options: ["Kuadran I", "Kuadran II", "Kuadran III", "Kuadran IV"],
+            answer: 2,
+            explanation: "Kuadran I (+,+), Kuadran II (-,+), Kuadran III (-,-), Kuadran IV (+,-). Karena (-5, -2) keduanya negatif, maka berada di Kuadran III."
+        }
+    ];
+
+    let questions = []; // Akan diisi hasil acak
+    let currentQ = 0;
+    let score = 0;
+
+    // --- FUNGSI PENGACAK (FISHER-YATES SHUFFLE) ---
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Fungsi Render Visual (Sama seperti sebelumnya)
+    function renderVisual(q) {
+        const size = 350;
+        const padding = 30;
+        let svg = `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="background:#f9fbe7; border-radius:10px;">`;
+        
+        if (q.gridType === 'alpha') {
+            const cols = ['A','B','C','D','E','F','G','H'];
+            const rows = 6;
+            const cellSize = (size - 2*padding) / 8; 
+
+            for (let i=0; i<=8; i++) {
+                let pos = padding + i*cellSize;
+                svg += `<line x1="${pos}" y1="${padding}" x2="${pos}" y2="${padding + rows*cellSize}" stroke="#cfd8dc" stroke-width="1"/>`;
+                if(i < 8) svg += `<text x="${pos + cellSize/2}" y="${padding + rows*cellSize + 20}" text-anchor="middle" font-weight="bold" fill="#2e7d32">${cols[i]}</text>`;
+            }
+            for (let j=0; j<=rows; j++) {
+                let pos = padding + (rows-j)*cellSize; 
+                svg += `<line x1="${padding}" y1="${pos}" x2="${padding + 8*cellSize}" y2="${pos}" stroke="#cfd8dc" stroke-width="1"/>`;
+                if(j < rows) svg += `<text x="${padding - 15}" y="${pos - cellSize/2 + 5}" text-anchor="middle" font-weight="bold" fill="#2e7d32">${j+1}</text>`;
+            }
+            if(q.lines) {
+                q.lines.forEach(l => {
+                    const x1Idx = cols.indexOf(l.x1);
+                    const x2Idx = cols.indexOf(l.x2);
+                    const px1 = padding + x1Idx*cellSize + cellSize/2;
+                    const py1 = padding + (rows - (l.y1-1))*cellSize - cellSize/2;
+                    const px2 = padding + x2Idx*cellSize + cellSize/2;
+                    const py2 = padding + (rows - (l.y2-1))*cellSize - cellSize/2;
+                    svg += `<line x1="${px1}" y1="${py1}" x2="${px2}" y2="${py2}" stroke="#ff9800" stroke-width="3" stroke-dasharray="5,5"/>`;
+                });
+            }
+            q.points.forEach(p => {
+                const colIdx = cols.indexOf(p.x);
+                const cx = padding + colIdx*cellSize + cellSize/2;
+                const cy = padding + (rows - (p.y-1))*cellSize - cellSize/2;
+                svg += `<text x="${cx}" y="${cy+5}" font-size="24" text-anchor="middle">${p.icon}</text>`;
+                svg += `<text x="${cx}" y="${cy-15}" font-size="12" fill="#000" font-weight="bold" text-anchor="middle" style="text-shadow: 1px 1px 0 #fff;">${p.label}</text>`;
+            });
+
+        } else {
+            const center = size / 2;
+            const maxVal = 6;
+            const step = (size - 2*padding) / (maxVal * 2);
+
+            svg += `<line x1="${padding}" y1="${center}" x2="${size-padding}" y2="${center}" stroke="#37474f" stroke-width="2"/>`; // X
+            svg += `<line x1="${center}" y1="${padding}" x2="${center}" y2="${size-padding}" stroke="#37474f" stroke-width="2"/>`; // Y
+            
+            for(let i = -maxVal; i <= maxVal; i++) {
+                let pos = center + i*step;
+                svg += `<line x1="${pos}" y1="${padding}" x2="${pos}" y2="${size-padding}" stroke="#eceff1" stroke-width="1" stroke-dasharray="2,2"/>`;
+                svg += `<line x1="${padding}" y1="${pos}" x2="${size-padding}" y2="${pos}" stroke="#eceff1" stroke-width="1" stroke-dasharray="2,2"/>`;
+            }
+            svg += `<text x="${size-15}" y="${center+20}" font-weight="bold">X</text>`;
+            svg += `<text x="${center+10}" y="20" font-weight="bold">Y</text>`;
+
+            if(q.lines) {
+                q.lines.forEach(l => {
+                    const x1 = center + l.x1*step;
+                    const y1 = center - l.y1*step;
+                    const x2 = center + l.x2*step;
+                    const y2 = center - l.y2*step;
+                    svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#ff9800" stroke-width="3"/>`;
+                });
+            }
+            q.points.forEach(p => {
+                const cx = center + p.x*step;
+                const cy = center - p.y*step;
+                svg += `<text x="${cx}" y="${cy+5}" font-size="20" text-anchor="middle">${p.icon}</text>`;
+                svg += `<text x="${cx+10}" y="${cy-10}" font-size="12" font-weight="bold">${p.label} (${p.x},${p.y})</text>`;
+            });
+        }
+        svg += `</svg>`;
+        document.getElementById('visual-area').innerHTML = svg;
+    }
+
+    function startQuiz() {
+        // ACAR SOAL SAAT TOMBOL MULAI DITEKAN
+        questions = shuffleArray([...questionsDB]); // Copy dan Acak
+        
+        document.getElementById('intro-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + '%';
+        
+        document.getElementById('story-text').innerHTML = `<p>${q.story}</p>`;
+        document.getElementById('question-text').innerText = `Misi ${currentQ+1}: ${q.question}`;
+        
+        renderVisual(q);
+
+        const inputArea = document.getElementById('input-area');
+        inputArea.innerHTML = '';
+        
+        if (q.type === 'mc') {
+            q.options.forEach((opt, idx) => {
+                inputArea.innerHTML += `
+                    <label class="option-label">
+                        <input type="radio" name="answer" value="${idx}"> ${opt}
+                    </label>`;
+            });
+        } else if (q.type === 'complex') {
+            q.options.forEach((opt, idx) => {
+                inputArea.innerHTML += `
+                    <label class="option-label">
+                        <input type="checkbox" name="answer" value="${idx}"> ${opt}
+                    </label>`;
+            });
+        } else if (q.type === 'fill') {
+            inputArea.innerHTML = `<input type="text" id="text-answer" placeholder="Contoh: (A,1) atau (2,3)" autocomplete="off">`;
+        }
+
+        document.getElementById('feedback-area').style.display = 'none';
+        document.getElementById('submit-btn').classList.remove('hidden');
+        document.getElementById('next-btn').classList.add('hidden');
+    }
+
+    function checkAnswer() {
+        const q = questions[currentQ];
+        let isCorrect = false;
+
+        if (q.type === 'mc') {
+            const el = document.querySelector('input[name="answer"]:checked');
+            if(!el) return alert("Pilih jawaban dulu ya!");
+            if(parseInt(el.value) === q.answer) isCorrect = true;
+        } 
+        else if (q.type === 'complex') {
+            const els = document.querySelectorAll('input[name="answer"]:checked');
+            if(els.length === 0) return alert("Pilih minimal satu jawaban!");
+            let userAns = Array.from(els).map(e => parseInt(e.value)).sort().toString();
+            let keyAns = q.answer.sort().toString();
+            if(userAns === keyAns) isCorrect = true;
+        }
+        else if (q.type === 'fill') {
+            const el = document.getElementById('text-answer');
+            if(!el.value) return alert("Tulis jawabanmu dulu!");
+            let clean = el.value.toLowerCase().replace(/\s/g, ''); 
+            if(clean === q.answer.toLowerCase()) isCorrect = true;
+        }
+
+        const fb = document.getElementById('feedback-area');
+        fb.style.display = 'block';
+        
+        if(isCorrect) {
+            score++;
+            fb.innerHTML = `<h3>✅ Hebat! Jawaban Benar</h3><p>${q.explanation}</p>`;
+            fb.style.backgroundColor = "#e8f5e9";
+            fb.style.borderColor = "#2e7d32";
+        } else {
+            fb.innerHTML = `<h3>🤔 Yuk Pelajari Lagi</h3><p>${q.explanation}</p>`;
+            fb.style.backgroundColor = "#fff3e0";
+            fb.style.borderColor = "#ef6c00";
+        }
+
+        document.getElementById('submit-btn').classList.add('hidden');
+        document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        
+        let finalScore = Math.round((score / questions.length) * 100);
+        document.getElementById('final-score').innerText = finalScore;
+        
+        let msg = "";
+        if(finalScore >= 80) msg = "Luar Biasa! Kamu Ahli Navigasi Sejati!";
+        else if(finalScore >= 60) msg = "Bagus! Kamu sudah mulai paham peta.";
+        else msg = "Tetap Semangat! Coba ulangi lagi ya.";
+        
+        document.getElementById('final-msg').innerText = msg;
+    }
+
+</script>
+
+</body>
+</html>
