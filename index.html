@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBT Belajar Sukses</title>
+    <title>CBT Belajar Sukses - DEMO</title>
     <style>
         :root {
             --primary: #0F3D81; /* Royal Blue */
@@ -212,7 +212,7 @@
 
     <div id="resultScreen" class="hidden" style="min-height: 100vh; background: var(--bg-color); padding-bottom: 50px;">
         <div class="app-header" style="justify-content: center;">
-            <h1>HASIL UJIAN DEMO</h1>
+            <h1>HASIL UJIAN</h1>
         </div>
         <div class="result-container">
             <h2 style="color: var(--primary); margin-bottom: 10px;">NILAI UJI COBA ANDA</h2>
@@ -221,7 +221,7 @@
             
             <div style="background: #eef2f7; padding: 25px 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #cdd4dc;">
                 <h3 style="margin-top:0; color: var(--primary);">Fitur Pembelajaran (Terkunci)</h3>
-                <p style="font-size: 0.9rem; color: #555; margin-bottom: 15px;">Versi Demo tidak mendukung pencetakan sertifikat dan pembahasan soal.</p>
+                <p style="font-size: 0.9rem; color: #555; margin-bottom: 15px;">Upgrade ke versi Premium untuk pencetakan sertifikat dan pembahasan soal.</p>
                 
                 <button class="btn-nav btn-locked" onclick="showPremiumAlert()" style="width: 100%; padding: 12px;">🔒 Buat & Unduh E-Sertifikat</button>
                 <button class="btn-nav btn-locked" onclick="showPremiumAlert()" style="width: 100%; padding: 12px;">🔒 Lihat Kunci Jawaban & Pembahasan Lengkap</button>
@@ -280,10 +280,10 @@
         // MASUKKAN LINK PRODUK PREMIUM ANDA DI BAWAH INI:
         const LINK_BELI_PREMIUM = "https://link-penjualan-produk-premium-anda.com";
         
-        const JUDUL_KUIS = "TKA SD - MATEMATIKA";
-        const PIN_AKSES = "BELAJAR&SUKSES";
-        const WAKTU_MENIT = 70;
-        const TARGET_TOTAL_SOAL = 30;
+        const JUDUL_KUIS = "TKA SD - BAHASA INDONESIA";
+        const PIN_AKSES = "BELAJAR&SUKSES"; // Kata sandi untuk versi demo
+        const WAKTU_MENIT = 75;
+        const TARGET_TOTAL_SOAL = 30; // Ditampilkan 30 soal sesuai ketentuan
 
         // --- KONFIGURASI VOUCHER SHOPEE AFFILIATE ---
         const LINK_VOUCHER_SHOPEE = "https://shope.ee/link_voucher_anda";
@@ -357,8 +357,8 @@
 [Tipe: PG] Di sudut baca ruang kelas, terdapat daftar koleksi buku: 24 buku dongeng, 15 buku ensiklopedia mini, dan 18 buku biografi pahlawan. Prosedur hitung yang tepat untuk mencari total keseluruhan buku cerita di sudut baca tersebut adalah .... | 24 + 15 + 18 ~ 24 x 15 x 18 ~ (24 + 15) x 18 ~ 24 + (18 - 15) | A | Untuk mencari total keseluruhan objek dari berbagai kategori dalam sebuah daftar, prosedur aplikasinya adalah penjumlahan beruntun. (Opsi B salah karena perkalian digunakan untuk melipatgandakan objek, bukan menggabungkan daftar kuantitas).
 [Tipe: PG] [IMG: Tabel hasil ujian matematika Kelas 6. Nilai 60: 4 anak, Nilai 70: 6 anak, Nilai 80: 8 anak, Nilai 90: 5 anak, Nilai 100: 2 anak. Keterangan di bawah tabel: Batas KKM kelulusan adalah nilai 75] Berdasarkan tabel hasil ujian tersebut, berapakah jumlah murid yang berhasil lulus? | 15 anak ~ 10 anak ~ 25 anak ~ 8 anak | A | Lulus berarti nilainya di atas batas KKM (75). Nilai yang memenuhi adalah 80 (8 anak) + 90 (5 anak) + 100 (2 anak) = 15 anak. (Opsi B salah karena itu adalah jumlah siswa yang "gagal" atau remidial: 4+6=10 anak; Opsi C salah karena siswa menjumlahkan seluruh anak di kelas tanpa peduli KKM).
 [Tipe: PG] [IMG: Grafik garis sederhana jumlah hari masuk sekolah Doni selama 4 bulan. Juli: 15 hari, Agustus: 24 hari, September: 22 hari, Oktober: 25 hari] Berdasarkan grafik tersebut, berapakah jumlah total hari masuk sekolah Doni pada bulan Agustus dan September jika digabungkan? | 46 hari ~ 86 hari ~ 24 hari ~ 47 hari | A | Hari masuk pada bulan Agustus = 24 hari. Bulan September = 22 hari. Total penggabungannya = 24 + 22 = 46 hari. (Opsi B salah jika siswa secara ceroboh menjumlahkan seluruh bulan di grafik: 15+24+22+25=86).
- `;
-        
+`;
+
         const RAW_CLUSTER = `
 ###
 [WACANA: Tugas Presentasi Kelompok] Kelompok belajar kelas 6 sedang menyusun tugas presentasi video. Mereka mendapati bahwa sisa kapasitas memori di sebuah HP tinggal sedikit untuk menyimpan hasil rekaman. Resolusi layar HP yang digunakan untuk merekam disetel pada rasio standar, dan mereka harus membagi waktu dengan efisien agar video selesai diedit sebelum tenggat waktu.
@@ -625,13 +625,25 @@
                 return res;
             };
 
-            finalQuestionList.push(...getSingle(3));
-            finalQuestionList.push(...getCluster(4));
+            // Menggunakan struktur mixing lengkap hingga 30 soal
+            finalQuestionList.push(...getSingle(3)); // Ambil 3 soal tanpa wacana
+            finalQuestionList.push(...getCluster(4)); // Ambil 4 soal berwacana
+            finalQuestionList.push(...getSingle(6)); // Ambil 6 soal tanpa wacana
+            finalQuestionList.push(...getCluster(7)); // Ambil 7 soal berwacana
             
+            // Hitung sisa soal yang kurang untuk genap 30
+            let remaining = TARGET_TOTAL_SOAL - finalQuestionList.length;
+            let takeCl = Math.floor(remaining / 2);
+            
+            finalQuestionList.push(...getCluster(takeCl));
+            finalQuestionList.push(...getSingle(TARGET_TOTAL_SOAL - finalQuestionList.length));
+
+            // Jika masih kurang, ambil sisanya dari bank soal single
             while(finalQuestionList.length < TARGET_TOTAL_SOAL && bankSingle.length > 0) {
                 finalQuestionList.push(bankSingle.shift());
             }
-            // Batasi persis dengan target untuk Demo
+            
+            // Pastikan mutlak terpotong di angka 30 soal
             finalQuestionList = finalQuestionList.slice(0, TARGET_TOTAL_SOAL);
         }
 
@@ -894,4 +906,3 @@
     </script>
 </body>
 </html>
-
